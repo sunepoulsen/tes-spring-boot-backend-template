@@ -42,6 +42,7 @@ class DeploymentSpockExtension implements IGlobalExtension {
 
     @Override
     void stop() {
+        templateBackendContainer.copyFileFromContainer('/app/logs/service.log', 'build/logs/tes-spring-boot-template-backend-service.log')
         templateBackendContainer.stop()
     }
 }
