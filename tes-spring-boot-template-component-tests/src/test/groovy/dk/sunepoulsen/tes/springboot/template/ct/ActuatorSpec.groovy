@@ -1,38 +1,31 @@
 package dk.sunepoulsen.tes.springboot.template.ct
 
-import dk.sunepoulsen.tes.springboot.ct.core.http.HttpHelper
-import dk.sunepoulsen.tes.springboot.ct.core.verification.HttpResponseVerificator
+import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsBackendIntegrator
+import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsClient
+import dk.sunepoulsen.tes.springboot.client.core.rs.model.monitoring.ServiceHealth
+import dk.sunepoulsen.tes.springboot.client.core.rs.model.monitoring.ServiceHealthStatusCode
 import spock.lang.Specification
 
-import java.net.http.HttpRequest
-
 class ActuatorSpec extends Specification {
+
+    TechEasySolutionsBackendIntegrator integrator
+
+    void setup() {
+        String baseUrl = "http://${DeploymentSpockExtension.templateBackendContainer().host}:${DeploymentSpockExtension.templateBackendContainer().getMappedPort(8080)}"
+        TechEasySolutionsClient client = new TechEasySolutionsClient(new URI(baseUrl))
+        this.integrator = new TechEasySolutionsBackendIntegrator(client)
+    }
 
     void "GET /actuator/health returns OK"() {
         given: 'Template service is available'
             DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
-            String baseUrl = "http://${DeploymentSpockExtension.templateBackendContainer().host}:${DeploymentSpockExtension.templateBackendContainer().getMappedPort(8080)}"
 
         when: 'Call GET /actuator/health'
-            HttpHelper httpHelper = new HttpHelper()
-            HttpRequest httpRequest = httpHelper.newRequestBuilder("${baseUrl}/actuator/health")
-                .GET()
-                .build()
+            ServiceHealth result = integrator.health().blockingGet()
 
-            HttpResponseVerificator verificator = httpHelper.sendRequest(httpRequest)
-
-        then: 'Response Code is 200'
-            verificator.responseCode(200)
-
-        and: 'Content Type is application/json'
-            verificator.contentType('application/vnd.spring-boot.actuator.v3+json')
-
-        and: 'Response body is json'
-            verificator.bodyIsJson()
-
-        and: 'Verify health body'
-            verificator.bodyAsJson() == [
-                'status': 'UP'
-            ]
+        then: 'Verify health body'
+            result == new ServiceHealth(
+                status: ServiceHealthStatusCode.UP
+            )
     }
 }
