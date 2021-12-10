@@ -11,7 +11,7 @@ TODO: Describe the purpose of this backend
 The backend provide the following endpoints:
 
 ```
-GET /health
+GET /actuator/health
 ```
 
 Monitoring endpoint to see if the backend is running.
