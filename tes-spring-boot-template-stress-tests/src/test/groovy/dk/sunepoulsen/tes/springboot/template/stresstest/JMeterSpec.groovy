@@ -13,11 +13,11 @@ class JMeterSpec extends Specification {
 
     void "Execute JMeter Test"() {
         given: 'Health service is available'
-            DeploymentSpockExtension.deployment.waitForAvailable(DeploymentSpockExtension.CONTAINER_NAME)
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
 
         when: 'Find external ports'
-            String port = DockerIntegrator.findExternalPort("${DeploymentSpockExtension.COMPOSE_NAME}_${DeploymentSpockExtension.CONTAINER_NAME}_1", DockerIntegrator.PRIVATE_SERVICE_PORT)
-            log.info("Container ${DeploymentSpockExtension.CONTAINER_NAME} is accessible on port ${port}")
+            Integer port = DeploymentSpockExtension.templateBackendContainer().getMappedPort(8080)
+            log.info("Container ${DeploymentSpockExtension.templateBackendContainer().dockerImageName} is accessible on port ${port}")
 
         and: 'Stress test working dir is empty'
             if (WORKING_DIR.exists()) {
@@ -36,7 +36,7 @@ class JMeterSpec extends Specification {
             Properties properties = new Properties()
             properties.load(getClass().getResourceAsStream(propertyFile))
 
-            properties.put('service.port', port)
+            properties.put('service.port', port.toString())
 
             log.info("Using ${propertyFile} property file with the stress test")
             properties.store(new FileOutputStream(WORKING_DIR.path + '/stress-test.properties'), '')

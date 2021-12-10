@@ -9,12 +9,13 @@ import java.net.http.HttpRequest
 class ActuatorSpec extends Specification {
 
     void "GET /actuator/health returns OK"() {
-        given: 'Features service is available'
-            DeploymentSpockExtension.deployment.waitForAvailable(DeploymentSpockExtension.CONTAINER_NAME)
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+            String baseUrl = "http://${DeploymentSpockExtension.templateBackendContainer().host}:${DeploymentSpockExtension.templateBackendContainer().getMappedPort(8080)}"
 
         when: 'Call GET /actuator/health'
-            HttpHelper httpHelper = new HttpHelper(DeploymentSpockExtension.deployment)
-            HttpRequest httpRequest = httpHelper.newRequestBuilder(DeploymentSpockExtension.CONTAINER_NAME, '/actuator/health')
+            HttpHelper httpHelper = new HttpHelper()
+            HttpRequest httpRequest = httpHelper.newRequestBuilder("${baseUrl}/actuator/health")
                 .GET()
                 .build()
 
