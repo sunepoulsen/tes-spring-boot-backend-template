@@ -13,8 +13,7 @@ dependencies {
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation "org.springdoc:springdoc-openapi-ui:1.5.12"
-
+    implementation "org.springdoc:springdoc-openapi-ui:${project.property('springdoc-openapi.version')}"
 }
 
 tasks.build.dependsOn tasks.jibDockerBuild
