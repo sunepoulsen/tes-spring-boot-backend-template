@@ -1,0 +1,9 @@
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    // Tech Easy Solutions
+    implementation "dk.sunepoulsen.tech-easy-solutions:tes-spring-boot-component-tests-core:${project.property('tes-spring-boot-component-tests-core.version')}"
+    implementation "dk.sunepoulsen.tech-easy-solutions:tes-spring-boot-client-core:${project.property('tes-spring-boot-client-core.version')}"
+}

@@ -1,0 +1,22 @@
+# ===================================================================
+#                   Swagger configuration
+# ===================================================================
+
+swagger:
+  title: 'TES Spring Boot Backend Template'
+  description: 'Backend Service'
+  contact:
+    name: 'Sune Thomas Poulsen'
+    url: ''
+    email: 'Sune.Poulsen@ufst.dk'
+  license: 'Apache License Version 2.0'
+  licenseUrl: 'https://github.com/springfox/springfox/blob/master/LICENSE'
+  version: '2.0'
+
+logging:
+  level:
+    dk.ufst.ekapital.asp: INFO
+    dk.ufst.ekapital.labs.springboot: INFO
+
+springdoc:
+  show-actuator: true
