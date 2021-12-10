@@ -1,5 +1,7 @@
 package dk.sunepoulsen.tes.springboot.template.ct
 
+import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsBackendIntegrator
+import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsClient
 import org.spockframework.runtime.extension.IGlobalExtension
 import org.spockframework.runtime.model.SpecInfo
 import org.testcontainers.containers.GenericContainer
@@ -11,6 +13,13 @@ class DeploymentSpockExtension implements IGlobalExtension {
 
     static GenericContainer templateBackendContainer() {
         return templateBackendContainer
+    }
+
+    static TechEasySolutionsBackendIntegrator templateBackendIntegrator() {
+        String baseUrl = "http://${templateBackendContainer().host}:${templateBackendContainer().getMappedPort(8080)}"
+        TechEasySolutionsClient client = new TechEasySolutionsClient(new URI(baseUrl))
+
+        return new TechEasySolutionsBackendIntegrator(client)
     }
 
     @Override
