@@ -7,6 +7,9 @@ plugins {
 }
 
 dependencies {
+    // Template Dependencies
+    implementation project(':tes-spring-boot-template-client')
+
     // Tech Easy Solutions
     implementation "dk.sunepoulsen.tech-easy-solutions:tes-spring-boot-service-core:${project.property('tes-spring-boot-service-core.version')}"
 

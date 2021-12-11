@@ -20,3 +20,4 @@ logging:
 
 springdoc:
   show-actuator: true
+  default-produces-media-type: 'application/json'

@@ -50,15 +50,18 @@ subprojects {
         implementation "org.slf4j:log4j-over-slf4j:${project.property('log4j-over-slf4j.version')}"
 
         // JUnit
-        testImplementation "junit:junit:${project.property('junit.version')}"
+        //testImplementation "junit:junit:${project.property('junit.version')}"
 
         // Spock
-        testImplementation "org.codehaus.groovy:groovy:2.5.12"
+        testImplementation "org.codehaus.groovy:groovy-all:3.0.9"
         testImplementation "org.spockframework:spock-core:${project.property('spock-core.version')}"
         testImplementation "cglib:cglib-nodep:${project.property('cglib-nodep.version')}"
         testImplementation "org.objenesis:objenesis:${project.property('objenesis.version')}"
     }
 
+    test {
+        useJUnitPlatform()
+    }
 }
 
 project('tes-spring-boot-template-component-tests') {
