@@ -13,10 +13,13 @@ class TemplateControllerSpec extends Specification {
         sut = new TemplateController()
     }
 
-    void "Create Template returns OK"() {
+    @Unroll
+    void "Create Template returns OK: #_testcase"() {
         given:
             TemplateModel model = new TemplateModel(
-                name: 'name'
+                id: null,
+                name: 'name',
+                description: _description
             )
 
         when:
@@ -24,6 +27,11 @@ class TemplateControllerSpec extends Specification {
 
         then:
             thrown(UnsupportedOperationException)
+
+        where:
+            _testcase                 | _description
+            'description is not null' | 'description'
+            'description is null'     | null
     }
 
     @Unroll
@@ -44,7 +52,8 @@ class TemplateControllerSpec extends Specification {
             exception.getServiceError().message == _errorMessage
 
         where:
-            _testcase        | _id | _name  | _errorCode | _errorParam | _errorMessage
-            'id is not null' | 10  | 'name' | null       | 'id'        | 'must be null'
+            _testcase        | _id  | _name  | _errorCode | _errorParam | _errorMessage
+            'id is not null' | 10   | 'name' | null       | 'id'        | 'must be null'
+            'name is null'   | null | null   | null       | 'name'      | 'must not be null'
     }
 }

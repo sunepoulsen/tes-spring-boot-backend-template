@@ -12,6 +12,10 @@ public class TemplateModel {
     @Schema(description = "Unique id of a template")
     private Long id;
 
+    @NotNull
     @Schema(description = "The name of the template")
     private String name;
+
+    @Schema(description = "The description of the template")
+    private String description;
 }
