@@ -1,16 +1,18 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.template
 
 import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiBadRequestException
-import dk.sunepoulsen.tes.springboot.template.service.rs.model.TemplateModel
+import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
 import spock.lang.Specification
 import spock.lang.Unroll
 
 class TemplateControllerSpec extends Specification {
 
+    TemplateLogic templateLogic
     TemplateController sut
 
     void setup() {
-        sut = new TemplateController()
+        templateLogic = Mock(TemplateLogic)
+        sut = new TemplateController(templateLogic)
     }
 
     @Unroll
@@ -21,12 +23,18 @@ class TemplateControllerSpec extends Specification {
                 name: 'name',
                 description: _description
             )
+            TemplateModel expected = new TemplateModel(
+                id: 1L,
+                name: model.name,
+                description: model.description
+            )
 
         when:
-            sut.create(model)
+            TemplateModel result = sut.create(model)
 
         then:
-            thrown(UnsupportedOperationException)
+            result == expected
+            1 * templateLogic.create(model) >> expected
 
         where:
             _testcase                 | _description
@@ -50,6 +58,8 @@ class TemplateControllerSpec extends Specification {
             exception.getServiceError().code == _errorCode
             exception.getServiceError().param == _errorParam
             exception.getServiceError().message == _errorMessage
+
+            0 * templateLogic.create(_)
 
         where:
             _testcase        | _id  | _name  | _errorCode | _errorParam | _errorMessage

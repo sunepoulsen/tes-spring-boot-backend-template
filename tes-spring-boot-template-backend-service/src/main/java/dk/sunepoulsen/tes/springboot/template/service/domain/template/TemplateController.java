@@ -4,23 +4,34 @@ import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ModelValidateExce
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError;
 import dk.sunepoulsen.tes.springboot.client.core.rs.validation.ModelValidator;
 import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiBadRequestException;
-import dk.sunepoulsen.tes.springboot.template.service.rs.model.TemplateModel;
+import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.cfg.defs.NullDef;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 public class TemplateController {
+
+    private TemplateLogic templateLogic;
+
+    @Autowired
+    public TemplateController(TemplateLogic templateLogic) {
+        this.templateLogic = templateLogic;
+    }
 
     @RequestMapping( value = "/templates", method = RequestMethod.POST )
     @ResponseStatus( HttpStatus.CREATED )
@@ -41,7 +52,11 @@ public class TemplateController {
             ) }
         )
     })
-    public TemplateModel create(@Parameter(description = "The template model to create") TemplateModel model) {
+    public TemplateModel create(
+        @RequestBody
+        @Parameter(description = "The template model to create")
+        TemplateModel model)
+    {
         try {
             ModelValidator.validate(model, TemplateModel.class, mappings -> mappings
                 .field("id")
@@ -49,14 +64,19 @@ public class TemplateController {
                 .constraint(new NullDef())
             );
 
-            throw new UnsupportedOperationException("Not implemented yet!");
+            return templateLogic.create(model);
         }
         catch( ModelValidateException ex) {
-            ex.getViolations().stream().findFirst().ifPresent(validateViolationModel -> {
-                throw new ApiBadRequestException(validateViolationModel.getParam(), validateViolationModel.getMessage(), ex);
-            });
-
-            throw new ApiBadRequestException("Unknown validation error", ex);
+            handleModelValidateException(ex);
+            return null;
         }
+    }
+
+    private void handleModelValidateException(ModelValidateException ex) {
+        ex.getViolations().stream().findFirst().ifPresent(validateViolationModel -> {
+            throw new ApiBadRequestException(validateViolationModel.getParam(), validateViolationModel.getMessage(), ex);
+        });
+
+        throw new ApiBadRequestException("Unknown validation error", ex);
     }
 }

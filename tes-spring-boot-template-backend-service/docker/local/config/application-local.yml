@@ -7,22 +7,13 @@ logging:
     dk.sunepoulsen.tes.springboot: INFO
 
 # ===================================================================
-#                   Swagger configuration
-# ===================================================================
-
-springdoc:
-  show-actuator: true
-  default-produces-media-type: 'application/json'
-
-# ===================================================================
 #                   Spring configuration
 # ===================================================================
 
 spring:
-  liquibase:
-    change-log: 'classpath:/db/changelog/changelog.xml'
-
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
+  datasource:
+    url: 'jdbc:postgresql://tes-spring-boot-template-db:5432/templates'
+    username: 'templates'
+    password: 'jukilo90'
+    initialize: false
+    driver-class-name: 'org.postgresql.Driver'
