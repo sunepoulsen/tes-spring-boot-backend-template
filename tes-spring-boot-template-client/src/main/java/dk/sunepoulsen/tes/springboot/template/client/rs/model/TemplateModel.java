@@ -1,5 +1,6 @@
-package dk.sunepoulsen.tes.springboot.template.service.rs.model;
+package dk.sunepoulsen.tes.springboot.template.client.rs.model;
 
+import dk.sunepoulsen.tes.springboot.client.core.rs.model.BaseModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -7,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Schema(description = "Template model")
-public class TemplateModel {
+public class TemplateModel implements BaseModel {
     @NotNull
     @Schema(description = "Unique id of a template")
     private Long id;
