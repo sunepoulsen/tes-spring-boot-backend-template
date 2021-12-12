@@ -13,6 +13,9 @@ logging:
 springdoc:
   show-actuator: true
   default-produces-media-type: 'application/json'
+  model-converters:
+    pageable-converter:
+      enabled: true
 
 # ===================================================================
 #                   Spring configuration

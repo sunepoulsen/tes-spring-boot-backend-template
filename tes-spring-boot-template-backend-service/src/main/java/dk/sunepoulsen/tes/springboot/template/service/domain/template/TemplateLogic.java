@@ -4,6 +4,8 @@ import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.Templat
 import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.model.TemplateEntity;
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,4 +23,10 @@ public class TemplateLogic {
         TemplateEntity entity = templateTransformations.toEntity(model);
         return templateTransformations.toModel(templatePersistence.create(entity));
     }
+
+    Page<TemplateModel> findAll(Pageable pageable) {
+        return templatePersistence.findAll(pageable)
+            .map(templateTransformations::toModel);
+    }
+
 }

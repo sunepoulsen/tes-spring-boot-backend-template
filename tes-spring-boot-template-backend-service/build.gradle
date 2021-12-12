@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "org.springdoc:springdoc-openapi-ui:${project.property('springdoc-openapi.version')}"
+    implementation "org.springdoc:springdoc-openapi-data-rest:${project.property('springdoc-openapi.version')}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Liquebase
