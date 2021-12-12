@@ -7,6 +7,10 @@ import spock.lang.Specification
 
 class TemplatesSpec extends Specification {
 
+    void setup() {
+        DeploymentSpockExtension.clearDatabase()
+    }
+
     void "POST /templates returns OK"() {
         given: 'Template service is available'
             DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
