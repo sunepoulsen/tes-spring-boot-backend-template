@@ -20,4 +20,9 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
+
+    <logger name="dk.sunepoulsen.tes.springboot" level="DEBUG"/>
+    <logger name="jdk.internal.httpclient" level="DEBUG"/>
+    <logger name="org.apache.http" level="debug"/>
+
 </configuration>
