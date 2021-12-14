@@ -1,7 +1,14 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.template
 
+import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError
 import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiBadRequestException
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
+import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.model.TemplateEntity
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.mapping.PropertyReferenceException
+import org.springframework.data.util.ClassTypeInformation
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -65,5 +72,25 @@ class TemplateControllerSpec extends Specification {
             _testcase        | _id  | _name  | _errorCode | _errorParam | _errorMessage
             'id is not null' | 10   | 'name' | null       | 'id'        | 'must be null'
             'name is null'   | null | null   | null       | 'name'      | 'must not be null'
+    }
+
+    void "Find all templates with unknown sorting"() {
+        given:
+            Pageable pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, 'wrong'))
+
+        when:
+            sut.findAll(pageable)
+
+        then:
+            ApiBadRequestException exception = thrown(ApiBadRequestException)
+            exception.getServiceError() == new ServiceError(
+                param: 'sort',
+                message: 'Unknown sort property'
+            )
+
+            0 * templateLogic.create(_)
+            1 * templateLogic.findAll(pageable) >> {
+                throw new PropertyReferenceException('wrong', ClassTypeInformation.from(TemplateEntity.class), [])
+            }
     }
 }

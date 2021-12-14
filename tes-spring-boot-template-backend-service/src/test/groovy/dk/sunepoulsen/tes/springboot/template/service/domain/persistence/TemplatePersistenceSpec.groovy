@@ -1,9 +1,14 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.persistence
 
+import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
 import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.model.TemplateEntity
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
+import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import spock.lang.Specification
@@ -42,5 +47,60 @@ class TemplatePersistenceSpec extends Specification {
 
         then:
             result == templateRepository.findById(result.id).get()
+    }
+
+    void "Get all templates: OK"() {
+        given:
+            TemplateEntity entity = templatePersistence.create(new TemplateEntity(
+                id: null,
+                name: 'name',
+                description: 'description'
+            ))
+
+        when:
+            Page<TemplateEntity> result = templatePersistence.findAll(PageRequest.of(0, 20))
+
+        then:
+            result.number == 0
+            result.size == 20
+            result.totalElements == 1L
+            result.totalPages == 1
+            result.toList() == [entity]
+    }
+
+    void "Get all templates with sorting: OK"() {
+        given:
+            TemplateEntity entity = templatePersistence.create(new TemplateEntity(
+                id: null,
+                name: 'name',
+                description: 'description'
+            ))
+
+        when:
+            Page<TemplateEntity> result = templatePersistence.findAll(PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, 'name')))
+
+        then:
+            result.number == 0
+            result.size == 20
+            result.totalElements == 1L
+            result.totalPages == 1
+            result.toList() == [entity]
+    }
+
+    void "Get all templates with sorting: Unknown property"() {
+        given:
+            TemplateEntity entity = templatePersistence.create(new TemplateEntity(
+                id: null,
+                name: 'name',
+                description: 'description'
+            ))
+
+        when:
+            templatePersistence.findAll(PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, 'wrong')))
+
+        then:
+            PropertyReferenceException exception = thrown(PropertyReferenceException)
+            exception.message == 'No property wrong found for type TemplateEntity!'
+
     }
 }

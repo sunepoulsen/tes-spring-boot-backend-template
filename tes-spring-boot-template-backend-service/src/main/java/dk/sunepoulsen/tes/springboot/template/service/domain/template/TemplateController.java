@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.cfg.defs.NullDef;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,8 +78,29 @@ public class TemplateController {
 
     @RequestMapping( value = "/templates", method = RequestMethod.GET )
     @ResponseStatus( HttpStatus.OK )
-    public PaginationResult<TemplateModel> find(Pageable pageable) {
-        return PaginationTransformations.toPaginationResult(templateLogic.findAll(pageable));
+    @Operation(summary = "Find all templates")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200",
+            description = "Returns all found templates in a paginating result",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = TemplateModel.class)
+            ) }
+        ),
+        @ApiResponse(responseCode = "400",
+            description = "The query parameters are not valid",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ServiceError.class)
+            ) }
+        )
+    })
+    public PaginationResult<TemplateModel> findAll(Pageable pageable) {
+        try {
+            return PaginationTransformations.toPaginationResult(templateLogic.findAll(pageable));
+        } catch (PropertyReferenceException ex) {
+            throw new ApiBadRequestException("sort", "Unknown sort property", ex);
+        }
     }
 
     private void handleModelValidateException(ModelValidateException ex) {
