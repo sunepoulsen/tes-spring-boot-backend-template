@@ -46,4 +46,9 @@ public class TemplateIntegrator extends TechEasySolutionsBackendIntegrator {
         return Single.fromFuture(httpClient.get(url.toString(), PaginationResult.class))
             .onErrorResumeNext(this::mapClientExceptions);
     }
+
+    public Single<TemplateModel> get(Long id) {
+        return Single.fromFuture(httpClient.get("/templates/" + id.toString(), TemplateModel.class))
+            .onErrorResumeNext(this::mapClientExceptions);
+    }
 }

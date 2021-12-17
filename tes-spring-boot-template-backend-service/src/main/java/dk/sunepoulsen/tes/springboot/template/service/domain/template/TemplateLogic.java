@@ -30,4 +30,8 @@ public class TemplateLogic {
             .map(templateTransformations::toModel);
     }
 
+    TemplateModel get(Long id) {
+        return templateTransformations.toModel(templatePersistence.get(id));
+    }
+
 }

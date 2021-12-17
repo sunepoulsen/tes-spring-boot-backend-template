@@ -1,6 +1,7 @@
 package dk.sunepoulsen.tes.springboot.template.ct
 
 import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientBadRequestException
+import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientNotFoundException
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError
 import dk.sunepoulsen.tes.springboot.ct.core.http.HttpHelper
@@ -161,6 +162,48 @@ class TemplatesSpec extends Specification {
             body.metadata.totalItems == 5
             body.results.size() == 5
             body.results[0].name == 'name-1'
+    }
+
+    void "GET /templates/{id}: Found"() {
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+
+            TemplateModel model = integrator.create(new TemplateModel(
+                name: "name",
+                description: "description"
+            )).blockingGet()
+
+        when: 'Call GET /templates/{id}'
+            TemplateModel result = integrator.get(model.id).blockingGet()
+
+        then: 'Verify returned template'
+            result == model
+    }
+
+    void "GET /templates/{id}: Not Found"() {
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+
+        when: 'Call GET /templates/{id}'
+            integrator.get(1L).blockingGet()
+
+        then: 'Verify returned template'
+            ClientNotFoundException exception = thrown(ClientNotFoundException)
+            exception.serviceError == new ServiceError(
+                param: 'id',
+                message: 'The resource does not exist'
+            )
+    }
+
+    void "GET /templates/{id}: Id is null"() {
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+
+        when: 'Call GET /templates/{id}'
+            integrator.get(null).blockingGet()
+
+        then: 'Verify returned template'
+            thrown(NullPointerException)
     }
 
 }

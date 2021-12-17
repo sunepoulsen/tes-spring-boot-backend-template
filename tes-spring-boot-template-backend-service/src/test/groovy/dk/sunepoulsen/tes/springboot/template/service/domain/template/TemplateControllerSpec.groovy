@@ -1,7 +1,9 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.template
 
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError
+import dk.sunepoulsen.tes.springboot.service.core.domain.logic.ResourceNotFoundException
 import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiBadRequestException
+import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiNotFoundException
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
 import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.model.TemplateEntity
 import org.springframework.data.domain.PageRequest
@@ -93,4 +95,53 @@ class TemplateControllerSpec extends Specification {
                 throw new PropertyReferenceException('wrong', ClassTypeInformation.from(TemplateEntity.class), [])
             }
     }
+
+    void "Get Template returns OK"() {
+        given:
+            TemplateModel model = new TemplateModel(
+                id: 5L,
+                name: 'name',
+                description: 'description'
+            )
+
+        when:
+            TemplateModel result = sut.get(model.id)
+
+        then:
+            result == model
+            1 * templateLogic.get(model.id) >> model
+    }
+
+    void "Get Template gets IllegalArgumentException"() {
+        when:
+            sut.get(null)
+
+        then:
+            ApiBadRequestException exception = thrown(ApiBadRequestException)
+            exception.getServiceError() == new ServiceError(
+                param: 'id',
+                message: 'message'
+            )
+
+            1 * templateLogic.get(null) >> {
+                throw new IllegalArgumentException('message')
+            }
+    }
+
+    void "Get Template gets ResourceNotFoundException"() {
+        when:
+            sut.get(null)
+
+        then:
+            ApiNotFoundException exception = thrown(ApiNotFoundException)
+            exception.getServiceError() == new ServiceError(
+                param: 'id',
+                message: 'message'
+            )
+
+            1 * templateLogic.get(null) >> {
+                throw new ResourceNotFoundException('id', 'message')
+            }
+    }
+
 }

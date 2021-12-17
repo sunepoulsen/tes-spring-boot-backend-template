@@ -91,4 +91,32 @@ class TemplateIntegratorSpec extends Specification {
             'Sort by two fields'            | 'page=0&size=20&sort=field1&sort=field2'      | PageRequest.of(0, 20, Sort.by('field1', 'field2'))
             'Sort by two fields descending' | 'page=0&size=20&sort=field1&sort=field2,desc' | PageRequest.of(0, 20, Sort.by([Sort.Order.asc('field1'), Sort.Order.desc('field2')]))
     }
+
+    void "Get template: OK"() {
+        given:
+            TemplateModel foundModel = new TemplateModel(id: 5L, name: 'name')
+
+        when:
+            TemplateModel result = sut.get(5L).blockingGet()
+
+        then:
+            result == foundModel
+
+            1 * client.get('/templates/5', TemplateModel) >> CompletableFuture.completedFuture(foundModel)
+    }
+
+    void "Get template: Map Exceptions"() {
+        when:
+            sut.get(5L).blockingGet()
+
+        then:
+            ClientBadRequestException exception = thrown(ClientBadRequestException)
+            exception.getServiceError() == new ServiceError(
+                message: 'message'
+            )
+
+            1 * client.get('/templates/5', TemplateModel) >> CompletableFuture.supplyAsync(() -> {
+                throw new ClientBadRequestException(null, new ServiceError(message: 'message'))
+            })
+    }
 }

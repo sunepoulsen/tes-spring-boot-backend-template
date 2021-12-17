@@ -5,6 +5,7 @@ import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult;
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError;
 import dk.sunepoulsen.tes.springboot.client.core.rs.transformations.PaginationTransformations;
 import dk.sunepoulsen.tes.springboot.client.core.rs.validation.ModelValidator;
+import dk.sunepoulsen.tes.springboot.service.core.domain.logic.LogicException;
 import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiBadRequestException;
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -100,6 +102,42 @@ public class TemplateController {
             return PaginationTransformations.toPaginationResult(templateLogic.findAll(pageable));
         } catch (PropertyReferenceException ex) {
             throw new ApiBadRequestException("sort", "Unknown sort property", ex);
+        }
+    }
+
+    @RequestMapping( value = "/templates/{id}", method = RequestMethod.GET )
+    @ResponseStatus( HttpStatus.OK )
+    @Operation(summary = "Returns a template")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200",
+            description = "Returns one template by its id",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = TemplateModel.class)
+            ) }
+        ),
+        @ApiResponse(responseCode = "400",
+            description = "The {id} parameters is not a number",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ServiceError.class)
+            ) }
+        ),
+        @ApiResponse(responseCode = "404",
+            description = "Unable to find a template with the given id",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ServiceError.class)
+            ) }
+        )
+    })
+    public TemplateModel get(@PathVariable("id") Long id) {
+        try {
+            return templateLogic.get(id);
+        } catch (IllegalArgumentException ex) {
+            throw new ApiBadRequestException("id", ex.getMessage(), ex);
+        } catch (LogicException ex) {
+            throw ex.mapApiException();
         }
     }
 

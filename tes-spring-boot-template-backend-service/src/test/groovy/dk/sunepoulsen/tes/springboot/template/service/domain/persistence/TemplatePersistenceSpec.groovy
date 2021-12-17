@@ -1,6 +1,6 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.persistence
 
-import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
+import dk.sunepoulsen.tes.springboot.service.core.domain.logic.ResourceNotFoundException
 import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.model.TemplateEntity
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -102,5 +102,36 @@ class TemplatePersistenceSpec extends Specification {
             PropertyReferenceException exception = thrown(PropertyReferenceException)
             exception.message == 'No property wrong found for type TemplateEntity!'
 
+    }
+
+    void "Get template: Found"() {
+        given:
+            TemplateEntity entity = templatePersistence.create(new TemplateEntity(
+                id: null,
+                name: 'name',
+                description: 'description'
+            ))
+
+        expect:
+            templatePersistence.get(entity.getId()) == entity
+    }
+
+    void "Get template: Not found"() {
+        when:
+            templatePersistence.get(5L)
+
+        then:
+            ResourceNotFoundException exception = thrown(ResourceNotFoundException)
+            exception.param == 'id'
+            exception.message == 'The resource does not exist'
+    }
+
+    void "Get template: Id is null"() {
+        when:
+            templatePersistence.get(null)
+
+        then:
+            IllegalArgumentException exception = thrown(IllegalArgumentException)
+            exception.message == 'May not be null'
     }
 }
