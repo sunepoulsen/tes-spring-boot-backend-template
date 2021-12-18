@@ -195,15 +195,35 @@ class TemplatesSpec extends Specification {
             )
     }
 
-    void "GET /templates/{id}: Id is null"() {
+    void "DELETE /templates/{id}: Found"() {
         given: 'Template service is available'
             DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
 
-        when: 'Call GET /templates/{id}'
-            integrator.get(null).blockingGet()
+            TemplateModel model = integrator.create(new TemplateModel(
+                name: "name",
+                description: "description"
+            )).blockingGet()
 
-        then: 'Verify returned template'
-            thrown(NullPointerException)
+        when: 'Call DELETE /templates/{id}'
+            integrator.delete(model.id).blockingAwait()
+
+        then: 'Verify no exceptions'
+            noExceptionThrown()
+    }
+
+    void "DELETE /templates/{id}: Not Found"() {
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+
+        when: 'Call DELETE /templates/{id}'
+            integrator.delete(1L).blockingAwait()
+
+        then: 'Verify NotFoundException'
+            ClientNotFoundException exception = thrown(ClientNotFoundException)
+            exception.serviceError == new ServiceError(
+                param: 'id',
+                message: 'The resource does not exist'
+            )
     }
 
 }

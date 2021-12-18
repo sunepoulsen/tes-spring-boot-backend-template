@@ -34,4 +34,7 @@ public class TemplateLogic {
         return templateTransformations.toModel(templatePersistence.get(id));
     }
 
+    void delete(Long id) {
+        templatePersistence.delete(id);
+    }
 }

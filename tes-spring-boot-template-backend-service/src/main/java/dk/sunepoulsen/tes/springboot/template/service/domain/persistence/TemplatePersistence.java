@@ -38,4 +38,16 @@ public class TemplatePersistence {
 
         return entity.get();
     }
+
+    public void delete(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("May not be null");
+        }
+
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("id", "The resource does not exist");
+        }
+
+        repository.deleteById(id);
+    }
 }

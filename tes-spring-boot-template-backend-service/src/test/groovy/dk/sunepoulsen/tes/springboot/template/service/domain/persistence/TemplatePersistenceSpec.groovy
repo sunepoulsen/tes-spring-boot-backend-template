@@ -134,4 +134,35 @@ class TemplatePersistenceSpec extends Specification {
             IllegalArgumentException exception = thrown(IllegalArgumentException)
             exception.message == 'May not be null'
     }
+
+    void "Delete template: Found"() {
+        given:
+            TemplateEntity entity = templatePersistence.create(new TemplateEntity(
+                id: null,
+                name: 'name',
+                description: 'description'
+            ))
+
+        expect:
+            templatePersistence.delete(entity.getId())
+    }
+
+    void "Delete template: Not found"() {
+        when:
+            templatePersistence.delete(5L)
+
+        then:
+            ResourceNotFoundException exception = thrown(ResourceNotFoundException)
+            exception.param == 'id'
+            exception.message == 'The resource does not exist'
+    }
+
+    void "Delete template: Id is null"() {
+        when:
+            templatePersistence.delete(null)
+
+        then:
+            IllegalArgumentException exception = thrown(IllegalArgumentException)
+            exception.message == 'May not be null'
+    }
 }

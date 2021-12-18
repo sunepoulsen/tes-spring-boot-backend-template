@@ -112,7 +112,7 @@ class TemplateControllerSpec extends Specification {
             1 * templateLogic.get(model.id) >> model
     }
 
-    void "Get Template gets IllegalArgumentException"() {
+    void "Get Template returns IllegalArgumentException"() {
         when:
             sut.get(null)
 
@@ -128,9 +128,9 @@ class TemplateControllerSpec extends Specification {
             }
     }
 
-    void "Get Template gets ResourceNotFoundException"() {
+    void "Get Template returns ResourceNotFoundException"() {
         when:
-            sut.get(null)
+            sut.get(5L)
 
         then:
             ApiNotFoundException exception = thrown(ApiNotFoundException)
@@ -139,7 +139,47 @@ class TemplateControllerSpec extends Specification {
                 message: 'message'
             )
 
-            1 * templateLogic.get(null) >> {
+            1 * templateLogic.get(5L) >> {
+                throw new ResourceNotFoundException('id', 'message')
+            }
+    }
+
+    void "Delete Template returns OK"() {
+        when:
+            sut.delete(5L)
+
+        then:
+            1 * templateLogic.delete(5L)
+    }
+
+    void "Delete Template returns IllegalArgumentException"() {
+        when:
+            sut.delete(null)
+
+        then:
+            ApiBadRequestException exception = thrown(ApiBadRequestException)
+            exception.getServiceError() == new ServiceError(
+                param: 'id',
+                message: 'message'
+            )
+
+            1 * templateLogic.delete(null) >> {
+                throw new IllegalArgumentException('message')
+            }
+    }
+
+    void "Delete Template returns ResourceNotFoundException"() {
+        when:
+            sut.delete(5L)
+
+        then:
+            ApiNotFoundException exception = thrown(ApiNotFoundException)
+            exception.getServiceError() == new ServiceError(
+                param: 'id',
+                message: 'message'
+            )
+
+            1 * templateLogic.delete(5L) >> {
                 throw new ResourceNotFoundException('id', 'message')
             }
     }

@@ -141,6 +141,38 @@ public class TemplateController {
         }
     }
 
+    @RequestMapping( value = "/templates/{id}", method = RequestMethod.DELETE )
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    @Operation(summary = "Delete a template")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200",
+            description = "Delete one template by its id"
+        ),
+        @ApiResponse(responseCode = "400",
+            description = "The {id} parameters is not a number",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ServiceError.class)
+            ) }
+        ),
+        @ApiResponse(responseCode = "404",
+            description = "Unable to find a template with the given id",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ServiceError.class)
+            ) }
+        )
+    })
+    public void delete(@PathVariable("id") Long id) {
+        try {
+            templateLogic.delete(id);
+        } catch (IllegalArgumentException ex) {
+            throw new ApiBadRequestException("id", ex.getMessage(), ex);
+        } catch (LogicException ex) {
+            throw ex.mapApiException();
+        }
+    }
+
     private void handleModelValidateException(ModelValidateException ex) {
         ex.getViolations().stream().findFirst().ifPresent(validateViolationModel -> {
             throw new ApiBadRequestException(validateViolationModel.getParam(), validateViolationModel.getMessage(), ex);

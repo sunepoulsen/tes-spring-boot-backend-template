@@ -1,6 +1,7 @@
 package dk.sunepoulsen.tes.springboot.template.client.rs
 
 import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientBadRequestException
+import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientNotFoundException
 import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsClient
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResultMetaData
@@ -117,6 +118,29 @@ class TemplateIntegratorSpec extends Specification {
 
             1 * client.get('/templates/5', TemplateModel) >> CompletableFuture.supplyAsync(() -> {
                 throw new ClientBadRequestException(null, new ServiceError(message: 'message'))
+            })
+    }
+
+    void "Delete template: OK"() {
+        when:
+            sut.delete(5L).blockingGet()
+
+        then:
+            1 * client.delete('/templates/5') >> CompletableFuture.completedFuture('string')
+    }
+
+    void "Delete template: Not Found"() {
+        when:
+            sut.delete(5L).blockingAwait()
+
+        then:
+            ClientNotFoundException exception = thrown(ClientNotFoundException)
+            exception.getServiceError() == new ServiceError(
+                message: 'message'
+            )
+
+            1 * client.delete('/templates/5') >> CompletableFuture.supplyAsync(() -> {
+                throw new ClientNotFoundException(null, new ServiceError(message: 'message'))
             })
     }
 }

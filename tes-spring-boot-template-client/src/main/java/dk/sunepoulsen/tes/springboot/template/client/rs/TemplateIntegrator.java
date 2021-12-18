@@ -4,7 +4,9 @@ import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutio
 import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsClient;
 import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult;
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel;
+import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.subjects.CompletableSubject;
 import org.springframework.data.domain.Pageable;
 
 import java.net.URLEncoder;
@@ -50,5 +52,10 @@ public class TemplateIntegrator extends TechEasySolutionsBackendIntegrator {
     public Single<TemplateModel> get(Long id) {
         return Single.fromFuture(httpClient.get("/templates/" + id.toString(), TemplateModel.class))
             .onErrorResumeNext(this::mapClientExceptions);
+    }
+
+    public Completable delete(Long id) {
+        return CompletableSubject.fromFuture(httpClient.delete("/templates/" + id.toString()))
+            .onErrorResumeNext(this::mapClientExceptionsAsCompletable);
     }
 }

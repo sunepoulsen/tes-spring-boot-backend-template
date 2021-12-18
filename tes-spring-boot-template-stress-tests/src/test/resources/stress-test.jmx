@@ -62,6 +62,11 @@
             <stringProp name="Argument.value">${__property(get.templates.sorting.throughput.procent)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="delete.template.throughput.procent" elementType="Argument">
+            <stringProp name="Argument.name">delete.template.throughput.procent</stringProp>
+            <stringProp name="Argument.value">${__property(delete.template.throughput.procent)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -202,7 +207,7 @@
                 </collectionProp>
               </HeaderManager>
               <hashTree/>
-              <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Throughput - POST /templates - Bad request" enabled="true">
+              <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="POST /templates - Bad request Throughput" enabled="true">
                 <intProp name="ThroughputController.style">1</intProp>
                 <boolProp name="ThroughputController.perThread">true</boolProp>
                 <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -352,7 +357,7 @@
                 </ResponseAssertion>
                 <hashTree/>
               </hashTree>
-              <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Throughput - GET /templates: Sorting" enabled="true">
+              <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="GET /templates: Sorting Throughput" enabled="true">
                 <intProp name="ThroughputController.style">1</intProp>
                 <boolProp name="ThroughputController.perThread">false</boolProp>
                 <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -488,9 +493,14 @@
                 <hashTree/>
               </hashTree>
             </hashTree>
-            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="DELETE /instances/{instance_id}" enabled="false"/>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="DELETE /templates/{id} Throughput" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${delete.template.throughput.procent}</stringProp>
+            </ThroughputController>
             <hashTree>
-              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DELETE /instances/{instance_id}" enabled="true">
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DELETE /templates/{id}" enabled="true">
                 <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
                 <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
                   <collectionProp name="Arguments.arguments">
@@ -506,7 +516,7 @@
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/instances/${instance.id}</stringProp>
+                <stringProp name="HTTPSampler.path">/templates/${template.id}</stringProp>
                 <stringProp name="HTTPSampler.method">DELETE</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -517,9 +527,9 @@
                 <stringProp name="HTTPSampler.response_timeout"></stringProp>
               </HTTPSamplerProxy>
               <hashTree>
-                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Code: ACCEPTED" enabled="true">
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Code: NO_CONTENT" enabled="true">
                   <collectionProp name="Asserion.test_strings">
-                    <stringProp name="49588">202</stringProp>
+                    <stringProp name="49590">204</stringProp>
                   </collectionProp>
                   <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
                   <boolProp name="Assertion.assume_success">false</boolProp>
