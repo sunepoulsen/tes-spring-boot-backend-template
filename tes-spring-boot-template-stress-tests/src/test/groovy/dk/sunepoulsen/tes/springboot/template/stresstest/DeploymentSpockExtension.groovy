@@ -37,15 +37,17 @@ class DeploymentSpockExtension implements IGlobalExtension {
         imageName = DockerImageName.parse('tes-spring-boot-template-backend-service:1.0.0-SNAPSHOT')
         templateBackendContainer = new GenericContainer<>(imageName)
             .withEnv('SPRING_PROFILES_ACTIVE', 'stress-test')
-            .withEnv('JAVA_OPTS', '-agentlib:jdwp=transport=dt_socket,address=8000,suspend=n,server=y')
             .withClasspathResourceMapping('/config/application-stress-test.yml', '/app/resources/application-stress-test.yml', BindMode.READ_ONLY)
-            .withExposedPorts(8000, 8080)
+            .withExposedPorts(8080)
             .withNetwork(network)
             .waitingFor(
                 Wait.forHttp('/actuator/health')
                     .forStatusCode(200)
             )
         templateBackendContainer.start()
+
+        log.info('Template Postgres Exported Port: {}', postgresqlContainer.getMappedPort(5432))
+        log.info('Template Backend Exported Port: {}', templateBackendContainer.getMappedPort(8080))
     }
 
     @Override
