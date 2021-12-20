@@ -195,6 +195,61 @@ class TemplatesSpec extends Specification {
             )
     }
 
+    void "PATCH /templates/{id}: Found and patched"() {
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+
+            TemplateModel model = integrator.create(new TemplateModel(
+                name: 'name',
+                description: 'description'
+            )).blockingGet()
+
+        when: 'Call PATCH /templates/{id}'
+            TemplateModel result = integrator.patch(model.id, new TemplateModel(name: 'new-name')).blockingGet()
+
+        then: 'Verify returned template'
+            result == new TemplateModel(
+                id: model.id,
+                name: 'new-name',
+                description: model.description
+            )
+    }
+
+    void "PATCH /templates/{id}: Bad Request"() {
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+
+            TemplateModel model = integrator.create(new TemplateModel(
+                name: 'name',
+                description: 'description'
+            )).blockingGet()
+
+        when: 'Call PATCH /templates/{id}'
+            integrator.patch(model.id, new TemplateModel(id: 18L)).blockingGet()
+
+        then: 'Verify thrown exception'
+            ClientBadRequestException exception = thrown(ClientBadRequestException)
+            exception.serviceError == new ServiceError(
+                param: 'id',
+                message: 'must be null'
+            )
+    }
+
+    void "PATCH /templates/{id}: Not Found"() {
+        given: 'Template service is available'
+            DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
+
+        when: 'Call PATCH /templates/{id}'
+            integrator.patch(1L, new TemplateModel(name: 'new-name')).blockingGet()
+
+        then: 'Verify thrown exception'
+            ClientNotFoundException exception = thrown(ClientNotFoundException)
+            exception.serviceError == new ServiceError(
+                param: 'id',
+                message: 'The resource does not exist'
+            )
+    }
+
     void "DELETE /templates/{id}: Found"() {
         given: 'Template service is available'
             DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
