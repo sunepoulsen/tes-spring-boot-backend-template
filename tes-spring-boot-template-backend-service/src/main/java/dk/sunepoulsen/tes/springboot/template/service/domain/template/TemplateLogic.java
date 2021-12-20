@@ -34,6 +34,11 @@ public class TemplateLogic {
         return templateTransformations.toModel(templatePersistence.get(id));
     }
 
+    TemplateModel patch(Long id, TemplateModel model) {
+        TemplateEntity entity = templateTransformations.toEntity(model);
+        return templateTransformations.toModel(templatePersistence.patch(id, entity));
+    }
+
     void delete(Long id) {
         templatePersistence.delete(id);
     }

@@ -12,6 +12,7 @@ import org.springframework.data.mapping.PropertyReferenceException
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -133,6 +134,47 @@ class TemplatePersistenceSpec extends Specification {
         then:
             IllegalArgumentException exception = thrown(IllegalArgumentException)
             exception.message == 'May not be null'
+    }
+
+    void "Patch template: Found"() {
+        given:
+            TemplateEntity entity = templatePersistence.create(new TemplateEntity(
+                id: null,
+                name: 'name',
+                description: 'description'
+            ))
+
+        expect:
+            templatePersistence.patch(entity.id, new TemplateEntity(name: 'new-name')) == new TemplateEntity(
+                id: entity.id,
+                name: 'new-name',
+                description: entity.description
+            )
+    }
+
+    void "Patch template: Not found"() {
+        when:
+            templatePersistence.patch(5L, new TemplateEntity())
+
+        then:
+            ResourceNotFoundException exception = thrown(ResourceNotFoundException)
+            exception.param == 'id'
+            exception.message == 'The resource does not exist'
+    }
+
+    @Unroll
+    void "Patch template: #_testcase"() {
+        when:
+            templatePersistence.patch(_id, _entity)
+
+        then:
+            IllegalArgumentException exception = thrown(IllegalArgumentException)
+            exception.message == 'May not be null'
+
+        where:
+            _testcase        | _id  | _entity
+            'Id is null'     | null | new TemplateEntity()
+            'Entity is null' | 5L   | null
     }
 
     void "Delete template: Found"() {

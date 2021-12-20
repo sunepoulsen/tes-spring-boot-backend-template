@@ -144,6 +144,60 @@ class TemplateControllerSpec extends Specification {
             }
     }
 
+    void "Patch Template returns OK"() {
+        given:
+            TemplateModel model = new TemplateModel(
+                name: 'new-name'
+            )
+            TemplateModel expected = new TemplateModel(
+                id: 5L,
+                name: 'new-name',
+                description: 'description'
+            )
+
+        when:
+            TemplateModel result = sut.patch(5L, model)
+
+        then:
+            result == expected
+            1 * templateLogic.patch(5L, model) >> expected
+    }
+
+    @Unroll
+    void "Patch Template accepts null values: #_testcase"() {
+        given:
+            TemplateModel model = new TemplateModel(
+                name: _name,
+                description: _description
+            )
+
+        when:
+            sut.patch(5L, model)
+
+        then:
+            1 * templateLogic.patch(5L, model)
+
+        where:
+            _testcase             | _name   | _description
+            'All values'          | null    | null
+            'Name is null'        | null    | 'value'
+            'Description is null' | 'value' | null
+    }
+
+    void "Patch Template returns bad request"() {
+        when:
+            sut.patch(5L, new TemplateModel(id: 9L))
+
+        then:
+            ApiBadRequestException exception = thrown(ApiBadRequestException)
+            exception.getServiceError() == new ServiceError(
+                param: 'id',
+                message: 'must be null'
+            )
+
+            0 * templateLogic.patch(_, _)
+    }
+
     void "Delete Template returns OK"() {
         when:
             sut.delete(5L)

@@ -141,6 +141,59 @@ public class TemplateController {
         }
     }
 
+    @RequestMapping( value = "/templates/{id}", method = RequestMethod.PATCH )
+    @ResponseStatus( HttpStatus.OK )
+    @Operation(summary = "Update an existing template")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200",
+            description = "The template has been updated",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = TemplateModel.class)
+            ) }
+        ),
+        @ApiResponse(responseCode = "400",
+            description = "The template model is not valid",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ServiceError.class)
+            ) }
+        ),
+        @ApiResponse(responseCode = "404",
+            description = "A template with the given id does not exist",
+            content = { @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ServiceError.class)
+            ) }
+        )
+    })
+    public TemplateModel patch(
+        @PathVariable("id")
+            Long id,
+        @RequestBody
+        @Parameter(description = "The template model to create")
+            TemplateModel model)
+    {
+        try {
+            ModelValidator.validate(model, TemplateModel.class, mappings -> mappings
+                .field("id")
+                .ignoreAnnotations(true)
+                .constraint(new NullDef())
+                .field("name")
+                .ignoreAnnotations(true)
+            );
+
+            return templateLogic.patch(id, model);
+        } catch( ModelValidateException ex) {
+            handleModelValidateException(ex);
+            return null;
+        } catch (IllegalArgumentException ex) {
+            throw new ApiBadRequestException("id", ex.getMessage(), ex);
+        } catch (LogicException ex) {
+            throw ex.mapApiException();
+        }
+    }
+
     @RequestMapping( value = "/templates/{id}", method = RequestMethod.DELETE )
     @ResponseStatus( HttpStatus.NO_CONTENT )
     @Operation(summary = "Delete a template")
