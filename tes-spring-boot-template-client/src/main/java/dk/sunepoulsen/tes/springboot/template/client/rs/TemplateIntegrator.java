@@ -54,6 +54,11 @@ public class TemplateIntegrator extends TechEasySolutionsBackendIntegrator {
             .onErrorResumeNext(this::mapClientExceptions);
     }
 
+    public Single<TemplateModel> patch(Long id, TemplateModel model) {
+        return Single.fromFuture(httpClient.patch("/templates/" + id.toString(), model, TemplateModel.class))
+            .onErrorResumeNext(this::mapClientExceptions);
+    }
+
     public Completable delete(Long id) {
         return CompletableSubject.fromFuture(httpClient.delete("/templates/" + id.toString()))
             .onErrorResumeNext(this::mapClientExceptionsAsCompletable);

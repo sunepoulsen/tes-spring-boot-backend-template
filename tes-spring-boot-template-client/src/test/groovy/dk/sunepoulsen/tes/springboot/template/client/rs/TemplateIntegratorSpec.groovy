@@ -121,6 +121,35 @@ class TemplateIntegratorSpec extends Specification {
             })
     }
 
+    void "Patch template: OK"() {
+        given:
+            TemplateModel patchModel = new TemplateModel(name: 'name')
+            TemplateModel returnedModel = new TemplateModel(id: 5L, name: 'name')
+
+        when:
+            TemplateModel result = sut.patch(5L, patchModel).blockingGet()
+
+        then:
+            result == returnedModel
+
+            1 * client.patch('/templates/5', patchModel, TemplateModel) >> CompletableFuture.completedFuture(returnedModel)
+    }
+
+    void "Patch template: Map exception"() {
+        given:
+            TemplateModel model = new TemplateModel(name: 'name')
+
+        when:
+            sut.patch(5L, new TemplateModel(name: 'name')).blockingGet()
+
+        then:
+            thrown(ClientBadRequestException)
+
+            1 * client.patch('/templates/5', model, TemplateModel) >> CompletableFuture.supplyAsync(() -> {
+                throw new ClientBadRequestException(null, new ServiceError(message: 'message'))
+            })
+    }
+
     void "Delete template: OK"() {
         when:
             sut.delete(5L).blockingGet()
