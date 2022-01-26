@@ -438,9 +438,9 @@
                 <hashTree/>
               </hashTree>
             </hashTree>
-            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="PUT /instances/{instance_id}" enabled="false"/>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="PATCH /templates/{id}" enabled="true"/>
             <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="PUT Instance Headers" enabled="true">
+              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="PATCH Template Headers" enabled="true">
                 <collectionProp name="HeaderManager.headers">
                   <elementProp name="" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -449,17 +449,14 @@
                 </collectionProp>
               </HeaderManager>
               <hashTree/>
-              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PUT /instances/{instance_id}" enabled="true">
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PATCH /templates/{id} - OK" enabled="true">
                 <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
                 <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
                   <collectionProp name="Arguments.arguments">
                     <elementProp name="" elementType="HTTPArgument">
                       <boolProp name="HTTPArgument.always_encode">false</boolProp>
                       <stringProp name="Argument.value">{&#xd;
-	&quot;id&quot;: ${instance.id},&#xd;
-     &quot;key&quot;: &quot;${instance.key}&quot;,&#xd;
-     &quot;name&quot;: &quot;new-name-${request.op.counter}&quot;,&#xd;
-     &quot;description&quot;: &quot;description-${request.op.counter}&quot;&#xd;
+     &quot;description&quot;: &quot;description-patch-${request.op.counter}&quot;&#xd;
 }&#xd;
 </stringProp>
                       <stringProp name="Argument.metadata">=</stringProp>
@@ -470,8 +467,8 @@
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/instances/${instance.id}</stringProp>
-                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <stringProp name="HTTPSampler.path">/templates/${template.id}</stringProp>
+                <stringProp name="HTTPSampler.method">PATCH</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
