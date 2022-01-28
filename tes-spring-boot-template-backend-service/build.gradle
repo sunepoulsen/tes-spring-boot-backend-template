@@ -31,4 +31,10 @@ dependencies {
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
 }
 
+jib {
+    from {
+        image = 'eclipse-temurin:17-jre'
+    }
+}
+
 tasks.build.dependsOn tasks.jibDockerBuild

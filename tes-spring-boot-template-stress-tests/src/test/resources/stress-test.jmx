@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.3">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="TES Backend Template Stress Test" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="TES Backend dk.sunepoulsen.tes.library.template.Template Stress Test" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
@@ -196,9 +196,9 @@
             <boolProp name="InterleaveControl.accrossThreads">false</boolProp>
           </InterleaveControl>
           <hashTree>
-            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Create Template" enabled="true"/>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Create dk.sunepoulsen.tes.library.template.Template" enabled="true"/>
             <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="POST Template Headers" enabled="true">
+              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="POST dk.sunepoulsen.tes.library.template.Template Headers" enabled="true">
                 <collectionProp name="HeaderManager.headers">
                   <elementProp name="" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
@@ -427,7 +427,7 @@
                   <stringProp name="Assertion.custom_message"></stringProp>
                 </ResponseAssertion>
                 <hashTree/>
-                <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert Template Id" enabled="true">
+                <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert dk.sunepoulsen.tes.library.template.Template Id" enabled="true">
                   <stringProp name="JSON_PATH">$.id</stringProp>
                   <stringProp name="EXPECTED_VALUE">${template.id}</stringProp>
                   <boolProp name="JSONVALIDATION">true</boolProp>
@@ -440,7 +440,7 @@
             </hashTree>
             <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="PATCH /templates/{id}" enabled="true"/>
             <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="PATCH Template Headers" enabled="true">
+              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="PATCH dk.sunepoulsen.tes.library.template.Template Headers" enabled="true">
                 <collectionProp name="HeaderManager.headers">
                   <elementProp name="" elementType="Header">
                     <stringProp name="Header.name">Content-Type</stringProp>
