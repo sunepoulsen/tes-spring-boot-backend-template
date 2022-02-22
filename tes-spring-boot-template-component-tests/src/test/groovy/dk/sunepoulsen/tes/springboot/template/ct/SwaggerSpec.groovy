@@ -1,7 +1,7 @@
 package dk.sunepoulsen.tes.springboot.template.ct
 
-import dk.sunepoulsen.tes.springboot.ct.core.http.HttpHelper
-import dk.sunepoulsen.tes.springboot.ct.core.verification.HttpResponseVerificator
+import dk.sunepoulsen.tes.http.HttpHelper
+import dk.sunepoulsen.tes.http.HttpResponseVerificator
 import spock.lang.Specification
 
 import java.net.http.HttpRequest
@@ -15,7 +15,7 @@ class SwaggerSpec extends Specification {
 
         when: 'Call GET /swagger-ui.html'
             HttpHelper httpHelper = new HttpHelper()
-            HttpRequest httpRequest = httpHelper.newRequestBuilder("${baseUrl}/swagger-ui.html")
+            HttpRequest httpRequest = httpHelper.newRequestBuilder(DeploymentSpockExtension.templateBackendContainer(),"/swagger-ui.html")
                 .GET()
                 .build()
 

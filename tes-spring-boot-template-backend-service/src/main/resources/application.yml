@@ -5,6 +5,7 @@
 logging:
   level:
     dk.sunepoulsen.tes.springboot: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
 
 # ===================================================================
 #                   Swagger configuration

@@ -1,11 +1,11 @@
 package dk.sunepoulsen.tes.springboot.template.ct
 
-import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientBadRequestException
-import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientNotFoundException
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError
-import dk.sunepoulsen.tes.springboot.ct.core.http.HttpHelper
-import dk.sunepoulsen.tes.springboot.ct.core.verification.HttpResponseVerificator
+import dk.sunepoulsen.tes.http.HttpHelper
+import dk.sunepoulsen.tes.http.HttpResponseVerificator
+import dk.sunepoulsen.tes.rest.integrations.exceptions.ClientBadRequestException
+import dk.sunepoulsen.tes.rest.integrations.exceptions.ClientNotFoundException
+import dk.sunepoulsen.tes.rest.models.PaginationModel
+import dk.sunepoulsen.tes.rest.models.ServiceErrorModel
 import dk.sunepoulsen.tes.springboot.template.client.rs.TemplateIntegrator
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
 import org.springframework.data.domain.PageRequest
@@ -58,7 +58,7 @@ class TemplatesSpec extends Specification {
 
         then: 'Verify exception for bad_request'
             ClientBadRequestException exception = thrown(ClientBadRequestException)
-            exception.serviceError == new ServiceError(
+            exception.serviceError == new ServiceErrorModel(
                 param: 'name',
                 message: 'must not be null'
             )
@@ -77,7 +77,7 @@ class TemplatesSpec extends Specification {
 
         when: 'Call POST /templates'
             Pageable pageable = PageRequest.of(0, 20)
-            PaginationResult<TemplateModel> result = integrator.findAll(pageable).blockingGet()
+            PaginationModel<TemplateModel> result = integrator.findAll(pageable).blockingGet()
 
         then: 'Verify health body'
             result.metadata.page == 0
@@ -101,7 +101,7 @@ class TemplatesSpec extends Specification {
 
         when: 'Call POST /templates'
             Pageable pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, 'name'))
-            PaginationResult<TemplateModel> result = integrator.findAll(pageable).blockingGet()
+            PaginationModel<TemplateModel> result = integrator.findAll(pageable).blockingGet()
 
         then: 'Verify health body'
             result.metadata.page == 0
@@ -118,11 +118,11 @@ class TemplatesSpec extends Specification {
 
         when: 'Call POST /templates'
             Pageable pageable = PageRequest.of(0, 20, Sort.by('wrong'))
-            PaginationResult<TemplateModel> result = integrator.findAll(pageable).blockingGet()
+            PaginationModel<TemplateModel> result = integrator.findAll(pageable).blockingGet()
 
         then: 'Verify health body'
             ClientBadRequestException exception = thrown(ClientBadRequestException)
-            exception.serviceError == new ServiceError(
+            exception.serviceError == new ServiceErrorModel(
                 param: 'sort',
                 message: 'Unknown sort property'
             )
@@ -142,7 +142,7 @@ class TemplatesSpec extends Specification {
 
         when: 'Call GET /templates'
             HttpHelper httpHelper = new HttpHelper()
-            HttpRequest httpRequest = httpHelper.newRequestBuilder("${baseUrl}/templates?size=wrong&page=0")
+            HttpRequest httpRequest = httpHelper.newRequestBuilder(DeploymentSpockExtension.templateBackendContainer(),"/templates?size=wrong&page=0")
                 .GET()
                 .build()
 
@@ -155,7 +155,7 @@ class TemplatesSpec extends Specification {
             verificator.contentType('application/json')
 
         and: 'Check error body'
-            PaginationResult<TemplateModel> body = verificator.bodyAsJsonOfType(PaginationResult)
+            PaginationModel<TemplateModel> body = verificator.bodyAsJsonOfType(PaginationModel)
             body.metadata.page == 0
             body.metadata.size == 20
             body.metadata.totalPages == 1
@@ -189,7 +189,7 @@ class TemplatesSpec extends Specification {
 
         then: 'Verify returned template'
             ClientNotFoundException exception = thrown(ClientNotFoundException)
-            exception.serviceError == new ServiceError(
+            exception.serviceError == new ServiceErrorModel(
                 param: 'id',
                 message: 'The resource does not exist'
             )
@@ -229,7 +229,7 @@ class TemplatesSpec extends Specification {
 
         then: 'Verify thrown exception'
             ClientBadRequestException exception = thrown(ClientBadRequestException)
-            exception.serviceError == new ServiceError(
+            exception.serviceError == new ServiceErrorModel(
                 param: 'id',
                 message: 'must be null'
             )
@@ -244,7 +244,7 @@ class TemplatesSpec extends Specification {
 
         then: 'Verify thrown exception'
             ClientNotFoundException exception = thrown(ClientNotFoundException)
-            exception.serviceError == new ServiceError(
+            exception.serviceError == new ServiceErrorModel(
                 param: 'id',
                 message: 'The resource does not exist'
             )
@@ -275,7 +275,7 @@ class TemplatesSpec extends Specification {
 
         then: 'Verify NotFoundException'
             ClientNotFoundException exception = thrown(ClientNotFoundException)
-            exception.serviceError == new ServiceError(
+            exception.serviceError == new ServiceErrorModel(
                 param: 'id',
                 message: 'The resource does not exist'
             )

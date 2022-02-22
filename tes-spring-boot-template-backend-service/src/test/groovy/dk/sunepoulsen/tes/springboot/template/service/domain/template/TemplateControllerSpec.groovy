@@ -1,9 +1,9 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.template
 
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError
-import dk.sunepoulsen.tes.springboot.service.core.domain.logic.ResourceNotFoundException
-import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiBadRequestException
-import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiNotFoundException
+import dk.sunepoulsen.tes.rest.models.ServiceErrorModel
+import dk.sunepoulsen.tes.springboot.rest.exceptions.ApiBadRequestException
+import dk.sunepoulsen.tes.springboot.rest.exceptions.ApiNotFoundException
+import dk.sunepoulsen.tes.springboot.rest.logic.exceptions.ResourceNotFoundException
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
 import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.model.TemplateEntity
 import org.springframework.data.domain.PageRequest
@@ -85,7 +85,7 @@ class TemplateControllerSpec extends Specification {
 
         then:
             ApiBadRequestException exception = thrown(ApiBadRequestException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 param: 'sort',
                 message: 'Unknown sort property'
             )
@@ -118,7 +118,7 @@ class TemplateControllerSpec extends Specification {
 
         then:
             ApiBadRequestException exception = thrown(ApiBadRequestException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 param: 'id',
                 message: 'message'
             )
@@ -134,7 +134,7 @@ class TemplateControllerSpec extends Specification {
 
         then:
             ApiNotFoundException exception = thrown(ApiNotFoundException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 param: 'id',
                 message: 'message'
             )
@@ -190,7 +190,7 @@ class TemplateControllerSpec extends Specification {
 
         then:
             ApiBadRequestException exception = thrown(ApiBadRequestException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 param: 'id',
                 message: 'must be null'
             )
@@ -212,7 +212,7 @@ class TemplateControllerSpec extends Specification {
 
         then:
             ApiBadRequestException exception = thrown(ApiBadRequestException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 param: 'id',
                 message: 'message'
             )
@@ -228,7 +228,7 @@ class TemplateControllerSpec extends Specification {
 
         then:
             ApiNotFoundException exception = thrown(ApiNotFoundException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 param: 'id',
                 message: 'message'
             )

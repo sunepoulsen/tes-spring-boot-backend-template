@@ -1,8 +1,8 @@
 package dk.sunepoulsen.tes.springboot.template.client.rs;
 
-import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsBackendIntegrator;
-import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsClient;
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult;
+import dk.sunepoulsen.tes.rest.integrations.TechEasySolutionsBackendIntegrator;
+import dk.sunepoulsen.tes.rest.integrations.TechEasySolutionsClient;
+import dk.sunepoulsen.tes.rest.models.PaginationModel;
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel;
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -22,11 +22,11 @@ public class TemplateIntegrator extends TechEasySolutionsBackendIntegrator {
                 .onErrorResumeNext(this::mapClientExceptions);
     }
 
-    public Single<PaginationResult> findAll() {
+    public Single<PaginationModel> findAll() {
         return findAll(null);
     }
 
-    public Single<PaginationResult> findAll(Pageable pageable) {
+    public Single<PaginationModel> findAll(Pageable pageable) {
         StringBuffer url = new StringBuffer();
         url.append("/templates");
 
@@ -45,7 +45,7 @@ public class TemplateIntegrator extends TechEasySolutionsBackendIntegrator {
             });
         }
 
-        return Single.fromFuture(httpClient.get(url.toString(), PaginationResult.class))
+        return Single.fromFuture(httpClient.get(url.toString(), PaginationModel.class))
             .onErrorResumeNext(this::mapClientExceptions);
     }
 

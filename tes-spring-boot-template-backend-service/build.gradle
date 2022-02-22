@@ -11,7 +11,10 @@ dependencies {
     implementation project(':tes-spring-boot-template-client')
 
     // Tech Easy Solutions
-    implementation "dk.sunepoulsen.tech-easy-solutions:tes-spring-boot-service-core:${project.property('tes-spring-boot-service-core.version')}"
+    implementation "dk.sunepoulsen.tes:tes-spring-boot-backend-logging:${project.property('tes-spring-boot-backend-logging.version')}"
+    implementation "dk.sunepoulsen.tes:tes-rest-models:${project.property('tes-rest-models.version')}"
+    implementation "dk.sunepoulsen.tes:tes-spring-boot-rest-logic:${project.property('tes-spring-boot-rest-logic.version')}"
+    implementation "dk.sunepoulsen.tes:tes-validation:${project.property('tes-validation.version')}"
 
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'

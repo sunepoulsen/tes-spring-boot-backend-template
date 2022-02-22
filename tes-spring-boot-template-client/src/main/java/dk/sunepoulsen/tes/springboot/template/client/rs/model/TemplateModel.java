@@ -1,6 +1,6 @@
 package dk.sunepoulsen.tes.springboot.template.client.rs.model;
 
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.BaseModel;
+import dk.sunepoulsen.tes.rest.models.BaseModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

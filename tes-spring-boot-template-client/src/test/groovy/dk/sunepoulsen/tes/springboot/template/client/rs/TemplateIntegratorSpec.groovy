@@ -1,11 +1,11 @@
 package dk.sunepoulsen.tes.springboot.template.client.rs
 
-import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientBadRequestException
-import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ClientNotFoundException
-import dk.sunepoulsen.tes.springboot.client.core.rs.integrations.TechEasySolutionsClient
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResultMetaData
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError
+import dk.sunepoulsen.tes.rest.integrations.TechEasySolutionsClient
+import dk.sunepoulsen.tes.rest.integrations.exceptions.ClientBadRequestException
+import dk.sunepoulsen.tes.rest.integrations.exceptions.ClientNotFoundException
+import dk.sunepoulsen.tes.rest.models.PaginationMetaData
+import dk.sunepoulsen.tes.rest.models.PaginationModel
+import dk.sunepoulsen.tes.rest.models.ServiceErrorModel
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -48,20 +48,20 @@ class TemplateIntegratorSpec extends Specification {
             thrown(ClientBadRequestException)
 
             1 * client.post('/templates', model, TemplateModel) >> CompletableFuture.supplyAsync(() -> {
-                throw new ClientBadRequestException(null, new ServiceError(message: 'message'))
+                throw new ClientBadRequestException(null, new ServiceErrorModel(message: 'message'))
             })
     }
 
     void "Get templates with no pagination: OK"() {
         when:
-            PaginationResult<TemplateModel> result = sut.findAll().blockingGet()
+            PaginationModel<TemplateModel> result = sut.findAll().blockingGet()
 
         then:
             result.metadata.totalItems == 20
 
-            1 * client.get('/templates', PaginationResult) >> CompletableFuture.completedFuture(
-                new PaginationResult<TemplateModel>(
-                    metadata: new PaginationResultMetaData(
+            1 * client.get('/templates', PaginationModel) >> CompletableFuture.completedFuture(
+                new PaginationModel<TemplateModel>(
+                    metadata: new PaginationMetaData(
                         totalItems: 20
                     )
                 )
@@ -71,14 +71,14 @@ class TemplateIntegratorSpec extends Specification {
     @Unroll
     void "Get templates with pagination: #_testcase"() {
         when:
-            PaginationResult<TemplateModel> result = sut.findAll(_pagination).blockingGet()
+            PaginationModel<TemplateModel> result = sut.findAll(_pagination).blockingGet()
 
         then:
             result.metadata.totalItems == 20
 
-            1 * client.get("/templates?${_query}", PaginationResult) >> CompletableFuture.completedFuture(
-                new PaginationResult<TemplateModel>(
-                    metadata: new PaginationResultMetaData(
+            1 * client.get("/templates?${_query}", PaginationModel) >> CompletableFuture.completedFuture(
+                new PaginationModel<TemplateModel>(
+                    metadata: new PaginationMetaData(
                         totalItems: 20
                     )
                 )
@@ -112,12 +112,12 @@ class TemplateIntegratorSpec extends Specification {
 
         then:
             ClientBadRequestException exception = thrown(ClientBadRequestException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 message: 'message'
             )
 
             1 * client.get('/templates/5', TemplateModel) >> CompletableFuture.supplyAsync(() -> {
-                throw new ClientBadRequestException(null, new ServiceError(message: 'message'))
+                throw new ClientBadRequestException(null, new ServiceErrorModel(message: 'message'))
             })
     }
 
@@ -146,7 +146,7 @@ class TemplateIntegratorSpec extends Specification {
             thrown(ClientBadRequestException)
 
             1 * client.patch('/templates/5', model, TemplateModel) >> CompletableFuture.supplyAsync(() -> {
-                throw new ClientBadRequestException(null, new ServiceError(message: 'message'))
+                throw new ClientBadRequestException(null, new ServiceErrorModel(message: 'message'))
             })
     }
 
@@ -164,12 +164,12 @@ class TemplateIntegratorSpec extends Specification {
 
         then:
             ClientNotFoundException exception = thrown(ClientNotFoundException)
-            exception.getServiceError() == new ServiceError(
+            exception.getServiceError() == new ServiceErrorModel(
                 message: 'message'
             )
 
             1 * client.delete('/templates/5') >> CompletableFuture.supplyAsync(() -> {
-                throw new ClientNotFoundException(null, new ServiceError(message: 'message'))
+                throw new ClientNotFoundException(null, new ServiceErrorModel(message: 'message'))
             })
     }
 }

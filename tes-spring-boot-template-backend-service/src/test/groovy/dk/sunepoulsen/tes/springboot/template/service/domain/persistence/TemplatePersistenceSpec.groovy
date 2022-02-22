@@ -1,6 +1,6 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.persistence
 
-import dk.sunepoulsen.tes.springboot.service.core.domain.logic.ResourceNotFoundException
+import dk.sunepoulsen.tes.springboot.rest.logic.exceptions.ResourceNotFoundException
 import dk.sunepoulsen.tes.springboot.template.service.domain.persistence.model.TemplateEntity
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -89,13 +89,6 @@ class TemplatePersistenceSpec extends Specification {
     }
 
     void "Get all templates with sorting: Unknown property"() {
-        given:
-            TemplateEntity entity = templatePersistence.create(new TemplateEntity(
-                id: null,
-                name: 'name',
-                description: 'description'
-            ))
-
         when:
             templatePersistence.findAll(PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, 'wrong')))
 

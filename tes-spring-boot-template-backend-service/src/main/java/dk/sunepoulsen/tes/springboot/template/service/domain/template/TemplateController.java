@@ -1,13 +1,13 @@
 package dk.sunepoulsen.tes.springboot.template.service.domain.template;
 
-import dk.sunepoulsen.tes.springboot.client.core.rs.exceptions.ModelValidateException;
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.PaginationResult;
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.ServiceError;
-import dk.sunepoulsen.tes.springboot.client.core.rs.transformations.PaginationTransformations;
-import dk.sunepoulsen.tes.springboot.client.core.rs.validation.ModelValidator;
-import dk.sunepoulsen.tes.springboot.service.core.domain.logic.LogicException;
-import dk.sunepoulsen.tes.springboot.service.core.domain.requests.ApiBadRequestException;
+import dk.sunepoulsen.tes.rest.models.PaginationModel;
+import dk.sunepoulsen.tes.rest.models.ServiceErrorModel;
+import dk.sunepoulsen.tes.rest.models.transformations.PaginationTransformations;
+import dk.sunepoulsen.tes.springboot.rest.exceptions.ApiBadRequestException;
+import dk.sunepoulsen.tes.springboot.rest.logic.exceptions.LogicException;
 import dk.sunepoulsen.tes.springboot.template.client.rs.model.TemplateModel;
+import dk.sunepoulsen.tes.validation.ModelValidator;
+import dk.sunepoulsen.tes.validation.exceptions.ModelValidateException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -54,7 +54,7 @@ public class TemplateController {
             description = "The template model is not valid",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         )
     })
@@ -93,11 +93,11 @@ public class TemplateController {
             description = "The query parameters are not valid",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         )
     })
-    public PaginationResult<TemplateModel> findAll(Pageable pageable) {
+    public PaginationModel<TemplateModel> findAll(Pageable pageable) {
         try {
             return PaginationTransformations.toPaginationResult(templateLogic.findAll(pageable));
         } catch (PropertyReferenceException ex) {
@@ -120,14 +120,14 @@ public class TemplateController {
             description = "The {id} parameters is not a number",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         ),
         @ApiResponse(responseCode = "404",
             description = "Unable to find a template with the given id",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         )
     })
@@ -156,14 +156,14 @@ public class TemplateController {
             description = "The template model is not valid",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         ),
         @ApiResponse(responseCode = "404",
             description = "A template with the given id does not exist",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         )
     })
@@ -205,14 +205,14 @@ public class TemplateController {
             description = "The {id} parameters is not a number",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         ),
         @ApiResponse(responseCode = "404",
             description = "Unable to find a template with the given id",
             content = { @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ServiceError.class)
+                schema = @Schema(implementation = ServiceErrorModel.class)
             ) }
         )
     })
