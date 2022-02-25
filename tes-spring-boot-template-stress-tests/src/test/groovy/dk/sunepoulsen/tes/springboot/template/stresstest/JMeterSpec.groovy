@@ -1,6 +1,5 @@
 package dk.sunepoulsen.tes.springboot.template.stresstest
 
-import dk.sunepoulsen.tes.springboot.ct.core.docker.DockerIntegrator
 import dk.sunepoulsen.tes.springboot.ct.core.util.ProcessUtils
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
