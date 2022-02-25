@@ -5,7 +5,15 @@
 logging:
   level:
     dk.sunepoulsen.tes.springboot: INFO
-    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+requests:
+  logging:
+    include-query-string: true
+    include-headers: true
+    include-payload: true
+    payload-max-size: 10000
+    message-prefix: 'REQUEST DATA: '
 
 # ===================================================================
 #                   Swagger configuration
