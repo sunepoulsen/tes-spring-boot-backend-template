@@ -17,7 +17,10 @@ dependencies {
     implementation "dk.sunepoulsen.tes:tes-validation:${project.property('tes-validation.version')}"
 
     // Spring Boot
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-jetty'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "org.springdoc:springdoc-openapi-ui:${project.property('springdoc-openapi.version')}"
     implementation "org.springdoc:springdoc-openapi-data-rest:${project.property('springdoc-openapi.version')}"

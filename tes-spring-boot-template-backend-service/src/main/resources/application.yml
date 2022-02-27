@@ -9,11 +9,8 @@ logging:
 
 requests:
   logging:
-    include-query-string: true
-    include-headers: true
-    include-payload: true
-    payload-max-size: 10000
-    message-prefix: 'REQUEST DATA: '
+    include-query-string: True
+    include-headers: False
 
 # ===================================================================
 #                   Swagger configuration
