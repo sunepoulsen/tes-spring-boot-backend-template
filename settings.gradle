@@ -1,3 +1,9 @@
+pluginManagement {
+    plugins {
+        id 'org.jetbrains.changelog' version "${jetbrainsChangelogVersion}"
+    }
+}
+
 rootProject.name = 'tes-spring-boot-template-backend'
 
 include 'tes-spring-boot-template-client'
