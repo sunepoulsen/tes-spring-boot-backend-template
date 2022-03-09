@@ -1,6 +1,9 @@
 pluginManagement {
     plugins {
         id 'org.jetbrains.changelog' version "${jetbrainsChangelogVersion}"
+        id 'org.springframework.boot' version "${springBootPluginVersion}"
+        id 'io.spring.dependency-management' version "${springDependencyPluginVersion}"
+        id 'com.google.cloud.tools.jib' version "${jibPluginVersion}"
     }
 }
 

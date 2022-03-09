@@ -1,9 +1,9 @@
 plugins {
     id 'groovy'
     id 'java'
-    id 'org.springframework.boot' version '2.6.0'
-    id 'io.spring.dependency-management'  version '1.0.11.RELEASE'
-    id 'com.google.cloud.tools.jib' version '3.1.4'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'com.google.cloud.tools.jib'
 }
 
 dependencies {
@@ -27,14 +27,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Liquebase
-    implementation 'org.liquibase:liquibase-core:4.6.2'
+    implementation "org.liquibase:liquibase-core:${project.property('liquibase-core.version')}"
 
     // Database Drivers
-    implementation 'com.h2database:h2:2.0.202'
-    implementation 'org.postgresql:postgresql:42.3.1'
+    implementation "com.h2database:h2:${project.property('h2.version')}"
+    implementation "org.postgresql:postgresql:${project.property('postgresql.version')}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
+    testImplementation "org.spockframework:spock-spring:${project.property('spock-core.version')}"
 }
 
 jib {
