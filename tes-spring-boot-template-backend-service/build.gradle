@@ -20,7 +20,7 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-data-rest:${project.property('springdoc-openapi.version')}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
+    testImplementation "org.spockframework:spock-spring:${project.property('spock-core.version')}"
 }
 
 jib {
