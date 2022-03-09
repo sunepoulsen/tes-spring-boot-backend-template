@@ -11,7 +11,6 @@ class SwaggerSpec extends Specification {
     void "GET /swagger-ui.html returns OK"() {
         given: 'Template service is available'
             DeploymentSpockExtension.templateBackendContainer().isHostAccessible()
-            String baseUrl = "http://${DeploymentSpockExtension.templateBackendContainer().host}:${DeploymentSpockExtension.templateBackendContainer().getMappedPort(8080)}"
 
         when: 'Call GET /swagger-ui.html'
             HttpHelper httpHelper = new HttpHelper()

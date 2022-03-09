@@ -8,8 +8,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @EnableAsync
 @SpringBootApplication( scanBasePackages = {
-    "dk.sunepoulsen.tes",
-    "dk.sunepoulsen.tes.springboot.template.service"
+    "dk.sunepoulsen.tes"
 })
 public class Application {
     public static void main( String[] args ) {

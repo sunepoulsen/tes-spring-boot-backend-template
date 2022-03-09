@@ -1,20 +1,14 @@
 plugins {
     id 'groovy'
     id 'java'
-    id 'org.springframework.boot' version '2.6.0'
-    id 'io.spring.dependency-management'  version '1.0.11.RELEASE'
-    id 'com.google.cloud.tools.jib' version '3.1.4'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'com.google.cloud.tools.jib'
 }
 
 dependencies {
-    // Template Dependencies
-    implementation project(':tes-spring-boot-template-client')
-
     // Tech Easy Solutions
     implementation "dk.sunepoulsen.tes:tes-spring-boot-backend-logging:${project.property('tes-spring-boot-backend-logging.version')}"
-    implementation "dk.sunepoulsen.tes:tes-rest-models:${project.property('tes-rest-models.version')}"
-    implementation "dk.sunepoulsen.tes:tes-spring-boot-rest-logic:${project.property('tes-spring-boot-rest-logic.version')}"
-    implementation "dk.sunepoulsen.tes:tes-validation:${project.property('tes-validation.version')}"
 
     // Spring Boot
     implementation('org.springframework.boot:spring-boot-starter-web') {
@@ -24,14 +18,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "org.springdoc:springdoc-openapi-ui:${project.property('springdoc-openapi.version')}"
     implementation "org.springdoc:springdoc-openapi-data-rest:${project.property('springdoc-openapi.version')}"
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // Liquebase
-    implementation 'org.liquibase:liquibase-core:4.6.2'
-
-    // Database Drivers
-    implementation 'com.h2database:h2:2.0.202'
-    implementation 'org.postgresql:postgresql:42.3.1'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
