@@ -1,4 +1,4 @@
-# TES Spring Boot Template Backend
+# TES Spring Boot dk.sunepoulsen.tes.library.template.Template Backend
 
 TODO: General description of this repository.
 

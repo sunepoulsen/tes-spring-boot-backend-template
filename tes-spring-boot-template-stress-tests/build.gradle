@@ -4,8 +4,8 @@ plugins {
 
 dependencies {
     // Tech Easy Solutions
-    implementation "dk.sunepoulsen.tech-easy-solutions:tes-spring-boot-component-tests-core:${project.property('tes-spring-boot-component-tests-core.version')}"
-    implementation "dk.sunepoulsen.tech-easy-solutions:tes-spring-boot-client-core:${project.property('tes-spring-boot-client-core.version')}"
+    testImplementation "dk.sunepoulsen.tes:tes-docker-containers:${project.property('tes-docker-containers.version')}"
+    testImplementation "dk.sunepoulsen.tes:tes-jmeter:${project.property('tes-jmeter.version')}"
 
     implementation platform("org.testcontainers:testcontainers-bom:${project.property('org-testcontainers.version')}")
     testImplementation 'org.testcontainers:testcontainers'

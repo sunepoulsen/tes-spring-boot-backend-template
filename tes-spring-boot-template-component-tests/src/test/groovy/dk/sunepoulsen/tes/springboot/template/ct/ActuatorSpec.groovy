@@ -1,7 +1,7 @@
 package dk.sunepoulsen.tes.springboot.template.ct
 
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.monitoring.ServiceHealth
-import dk.sunepoulsen.tes.springboot.client.core.rs.model.monitoring.ServiceHealthStatusCode
+import dk.sunepoulsen.tes.rest.models.monitoring.ServiceHealth
+import dk.sunepoulsen.tes.rest.models.monitoring.ServiceHealthStatusCode
 import spock.lang.Specification
 
 class ActuatorSpec extends Specification {
